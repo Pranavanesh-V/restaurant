@@ -17,6 +17,9 @@ import 'Past_bookings.dart';
 import 'Personal_info_page.dart';
 import 'Password_page.dart';
 import 'Edit_profile_page.dart';
+import 'Security_page.dart';
+import 'About_page.dart';
+import 'Password_reset_link_page.dart';
 
 void main() {
 
@@ -55,8 +58,11 @@ void main() {
       "/Upcoming": (context) => UpcomingBookings(),
       "/Past": (context) => PastBookings(),
       "/Personal": (context) => PersonalInfoPage(),
-      "/Password": (context) => PasswordPage(),
       "/Edit": (context) => EditProfilePage(),
+      "/Password": (context) => PasswordPage(),
+      "/Password_reset": (context) => PasswordResetLinkPage(),
+      "/Security": (context) => SecurityPage(),
+      "/About": (context) => AboutPage(),
     },
   )
   );

@@ -24,6 +24,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: IconButton(onPressed: (){
+              const snackBar = SnackBar(
+                content: Text("Profile Edited successfully"),
+                elevation: 5,
+                duration: Duration(seconds: 1),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
               Navigator.pop(context);
             }, icon: Icon(Icons.check)),
           ),
@@ -56,7 +62,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Container(
                       width: 500, // Set the width
                       height: 60, // Set the height
-                      padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey, // Set the border color
@@ -64,10 +69,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         borderRadius: BorderRadius.circular(10.0), // Optional: Set border radius
                       ),
-                      child: const Center(
-                        child: Text(
-                          "Example Name",
-                          style: TextStyle(
+                      child: Center(
+                        child: TextField(
+                          onTapOutside: (x){
+                            print(x);
+                          },
+                          decoration: const InputDecoration(
+                            border: InputBorder.none, // Remove the underline border
+                            enabledBorder: InputBorder.none, // Ensure no border when enabled
+                            focusedBorder: InputBorder.none,
+                          ),
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
                             fontSize: 16.0, // Optional: Set text size
                           ),
                         ),
@@ -129,7 +143,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Container(
                       width: 500, // Set the width
                       height: 60, // Set the height
-                      padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey, // Set the border color
@@ -137,10 +150,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         borderRadius: BorderRadius.circular(10.0), // Optional: Set border radius
                       ),
-                      child: const Center(
-                        child: Text(
-                          "Example Phone number",
-                          style: TextStyle(
+                      child: Center(
+                        child: TextField(
+                          onTapOutside: (x){
+                            print(x);
+                          },
+                          decoration: const InputDecoration(
+                            border: InputBorder.none, // Remove the underline border
+                            enabledBorder: InputBorder.none, // Ensure no border when enabled
+                            focusedBorder: InputBorder.none,
+                          ),
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
                             fontSize: 16.0, // Optional: Set text size
                           ),
                         ),
@@ -161,7 +183,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Container(
                       width: 500, // Set the width
                       height: 60, // Set the height
-                      padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey, // Set the border color
@@ -169,10 +190,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         borderRadius: BorderRadius.circular(10.0), // Optional: Set border radius
                       ),
-                      child: const Center(
-                        child: Text(
-                          "Example Email",
-                          style: TextStyle(
+                      child: Center(
+                        child: TextField(
+                          onTapOutside: (x){
+                            print(x);
+                          },
+                          decoration: const InputDecoration(
+                            border: InputBorder.none, // Remove the underline border
+                            enabledBorder: InputBorder.none, // Ensure no border when enabled
+                            focusedBorder: InputBorder.none,
+                          ),
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
                             fontSize: 16.0, // Optional: Set text size
                           ),
                         ),

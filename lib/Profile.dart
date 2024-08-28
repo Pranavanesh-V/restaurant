@@ -31,36 +31,63 @@ class _ProfileState extends State<Profile> {
     print(widget.uid);
   }
 
-  void show()
-  {
+  void show() {
     showDialog(
       context: context,
-      builder: (BuildContext context){
+      builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.black12,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextButton(onPressed: (){}, child: const Text("Security",style: TextStyle(
-                color: Colors.white,fontSize: 24
-              ),)),
-              TextButton(onPressed: (){}, child: const Text("About",style: TextStyle(
-                color: Colors.white,fontSize: 24
-              ),)),
-              TextButton(onPressed: (){
-                _authService.signOut();
-                Navigator.pushReplacementNamed(context, '/Landing');
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss the dialog
+                  Navigator.pushNamed(context, "/Security"); // Navigate to Security page
                 },
-                  child: const Text("Logout",style:TextStyle(
-                color: Colors.white,fontSize: 24
-              ),)),
+                child: const Text(
+                  "Security",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss the dialog
+                  Navigator.pushNamed(context, "/About");
+                },
+                child: const Text(
+                  "About",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  _authService.signOut(); // Sign out the user
+                  Navigator.of(context).pop(); // Dismiss the dialog
+                  Navigator.pushReplacementNamed(context, '/Landing'); // Navigate to Landing page
+                },
+                child: const Text(
+                  "Logout",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
             ],
           ),
         );
-      }
+      },
     );
   }
+
 
   Future<void> fetchData(String uid) async {
     try {
