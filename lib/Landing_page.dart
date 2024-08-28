@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:restaurant/AuthService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -76,7 +77,8 @@ class _LandingPageState extends State<LandingPage> {
                   onPressed: () async {
                     User? user = await _authService.signInWithGoogle();
                     if (user != null) {
-                      Navigator.pushReplacementNamed(context, '/Home',arguments: 'Hello from the first page!');
+                      //CircularProgressIndicator();
+                      Navigator.pushNamed(context, '/Home');
                       print('Sign-In Successful: ${user.uid}');
                     }
                     else

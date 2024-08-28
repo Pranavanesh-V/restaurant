@@ -4,7 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:restaurant/AuthService.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+
+  String data = "Loading...";
+  String uid="";
+
+  Profile(String uid, {super.key})
+  {
+    this.uid = uid;
+    print(uid);
+  }
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -13,6 +21,15 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
 
   final AuthService _authService = AuthService();
+
+  final databaseReference = FirebaseDatabase.instance.ref().child("Users");
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData(widget.uid);
+    print(widget.uid);
+  }
 
   void show()
   {
@@ -45,26 +62,17 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  final databaseReference = FirebaseDatabase.instance.ref().child("Users");
-  String data = "Loading...";
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
-
-  Future<void> fetchData() async {
+  Future<void> fetchData(String uid) async {
     try {
-      DatabaseEvent event = await databaseReference.child("kNOcwi4UVjZJocua8b1uWOfCG8H3").once();
+      DatabaseEvent event = await databaseReference.child(uid).once();
       DataSnapshot snapshot = event.snapshot;
 
       setState(() {
-        data = snapshot.child("UserName").value.toString();
+        widget.data = snapshot.child("UserName").value.toString();
       });
     } catch (error) {
       setState(() {
-        data = "Error fetching data: $error";
+        widget.data = "Error fetching data: $error";
       });
     }
   }
@@ -102,7 +110,7 @@ class _ProfileState extends State<Profile> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(data,
+                            Text(widget.data,
                               style: const TextStyle(
                                 fontSize: 22,
                               ),

@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Favourite.dart';
 import 'Explore.dart';
 import 'Profile.dart';
@@ -24,8 +26,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
 
-    //final String data = ModalRoute.of(context)!.settings.arguments as String;
-    //print(data);
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String? uid = user?.uid;
 
     return PopScope(
       onPopInvoked: (c){
@@ -45,10 +47,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ),
         body: TabBarView(
           controller: _tabController,
-          children: const [
+          children: [
             Explore(),
             Favourite(),
-            Profile(),
+            Profile(uid!),
           ],
         ),
         bottomNavigationBar: Material(
