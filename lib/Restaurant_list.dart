@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class List_restaurant extends StatefulWidget {
@@ -12,19 +14,73 @@ class List_restaurant extends StatefulWidget {
 
 class _List_restaurantState extends State<List_restaurant> {
 
+  late DatabaseReference _database;
   late List<bool> _favoriteStates;
+  final List<String> _favoriteRestaurants = [];
+  late String _currentUserUID;
 
   @override
   void initState() {
     super.initState();
-    // Initialize favorite states for all items as false
     _favoriteStates = List<bool>.filled(widget.displayRes.length, false);
+    _initializeDatabase();
   }
 
-  void _toggleFavorite(int index) {
+  Future<void> _initializeDatabase() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      _currentUserUID = user.uid;
+      _database = FirebaseDatabase.instance.ref().child("Users").child(_currentUserUID).child('Favourites');
+
+      // Fetch initial favorite states
+      _loadFavorites();
+    }
+  }
+
+  /// Fetch favorite restaurants and sync with the local list
+  Future<void> _loadFavorites() async {
+    final snapshot = await _database.get();
+
+    if (snapshot.exists) {
+      final favorites = Map<String, dynamic>.from(snapshot.value as Map);
+      setState(() {
+        _favoriteRestaurants.clear();
+        _favoriteRestaurants.addAll(favorites.keys);
+      });
+      _syncFavoriteStates();
+    }
+  }
+
+  /// Sync favorite states with `_favoriteRestaurants`
+  void _syncFavoriteStates() {
+    for (int i = 0; i < widget.displayRes.length; i++) {
+      if (_favoriteRestaurants.contains(widget.displayRes[i])) {
+        _favoriteStates[i] = true;
+      }
+    }
+  }
+
+  /// Toggle favorite state and update Firebase Realtime Database
+  void _toggleFavorite(int index) async {
+    final restaurantName = widget.displayRes[index];
+
     setState(() {
       _favoriteStates[index] = !_favoriteStates[index];
     });
+
+    if (_favoriteStates[index]) {
+      // Add to Firebase
+      await _database.child(restaurantName).set({'value': 'yes'});
+      print('$restaurantName added to favorites!');
+    } else {
+      // Remove from Firebase
+      await _database.child(restaurantName).remove();
+      print('$restaurantName removed from favorites!');
+    }
+
+    // Reload favorites
+    _loadFavorites();
   }
 
   @override
@@ -93,8 +149,9 @@ class _List_restaurantState extends State<List_restaurant> {
                           _favoriteStates[index]
                               ? Icons.favorite
                               : Icons.favorite_border,
-                          color:
-                          _favoriteStates[index] ? Colors.red : Colors.grey,
+                          color: _favoriteStates[index]
+                              ? Colors.red
+                              : Colors.grey,
                         ),
                       ),
                     ],
@@ -106,5 +163,11 @@ class _List_restaurantState extends State<List_restaurant> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    // Clean up Firebase listeners if added
+    super.dispose();
   }
 }
