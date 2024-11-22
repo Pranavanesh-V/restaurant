@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,8 +11,43 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-  String emailId = "";
-  String password = "";
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  /// Authenticate with Email/Password
+  Future<void> _authenticateWithEmail() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage("Please fill in all fields");
+      return;
+    }
+
+    try {
+      // Try signing in with Email/Password
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      _showMessage("Signed in successfully!");
+      Navigator.pushNamed(context, "/Home");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        // User not found; create a new account
+        Navigator.popAndPushNamed(context, "/Sign");
+      } else {
+        _showMessage("Error: ${e.message}");
+      }
+    }
+  }
+
+  /// Display messages
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: TextField(
+                controller: _emailController,
                 decoration: const InputDecoration(
                   hintText: "Email Address",
                   hintStyle: TextStyle(
@@ -59,12 +97,6 @@ class _LoginPageState extends State<LoginPage> {
                 autofocus: true,
                 enableIMEPersonalizedLearning: true,
                 keyboardType: TextInputType.emailAddress,
-                onSubmitted: (text){
-                  emailId = text;
-                },
-                onChanged: (text){
-                  emailId = text;
-                },
               ),
             ),
             const SizedBox(
@@ -78,36 +110,44 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: TextField(
-                decoration: const InputDecoration(
+                obscureText: !_isPasswordVisible, // Hide or show password text
+                keyboardType: TextInputType.text,
+                controller: _passwordController,
+                decoration: InputDecoration(
                   hintText: "Password",
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                       color: Colors.grey
                   ),
-                  prefixIcon:Icon(Icons.person),
-                  label: Text("Password"),
-                  border: OutlineInputBorder(
+                  prefixIcon:const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
+                  label: const Text("Password"),
+                  border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                           Radius.circular(100)
                       )
                   ),
                 ),
-                keyboardType: TextInputType.visiblePassword,
                 maxLines: 1,
                 enableSuggestions: true,
                 enableIMEPersonalizedLearning: true,
-                onSubmitted: (text){
-                  password = text;
-                },
-                onChanged: (text){
-                  password = text;
-                },
               ),
             ),
             Row(
               children: [
                 const SizedBox(width: 10,),
                 TextButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.pushNamed(context, "/Password_reset");
+                  },
                   child: const Text("forgot password?",style: TextStyle(
                     fontSize:18,
                     color: Colors.black,
@@ -118,9 +158,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 100,),
             Center(
               child: FilledButton.icon(
-                  onPressed: (){
-                    Navigator.pushNamed(context, "/Home");
-                    },
+                  onPressed: _authenticateWithEmail,
                   label: const Icon(Icons.arrow_right_alt_sharp),
                 style: FilledButton.styleFrom(
                   elevation: 5.0,

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:restaurant/AuthService.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -14,6 +14,31 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
 
   final AuthService _authService = AuthService();
+  final DatabaseReference _database = FirebaseDatabase.instance.ref();
+
+
+  void google_auth() async
+  {
+    User? user = await _authService.signInWithGoogle();
+    if (user != null) {
+      CircularProgressIndicator();
+      _database.child("Users").child(user.uid).set({
+        "Address":"-",
+        "Email":user.email,
+        "Phone":user.phoneNumber,
+        "Profile":"No",
+        "Profile value":"No",
+        "UID":user.uid,
+        "UserName":user.displayName
+      });
+      Navigator.pushNamed(context, '/Home');
+      print('Sign-In Successful: ${user.uid}');
+    }
+    else
+    {
+      print("Sign in unsuccessful");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,23 +99,14 @@ class _LandingPageState extends State<LandingPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               IconButton(
-                  onPressed: () async {
-                    User? user = await _authService.signInWithGoogle();
-                    if (user != null) {
-                      //CircularProgressIndicator();
-                      Navigator.pushNamed(context, '/Home');
-                      print('Sign-In Successful: ${user.uid}');
-                    }
-                    else
-                      {
-                        print("Sign in unsuccessful");
-                      }
+                  onPressed: ()  {
+                    google_auth();
                   },
                   icon: Image.asset("assets/google.png", width: 40,),
                   color: null),
               TextButton(
                 onPressed: (){
-                  print("google");
+                  google_auth();
                 },
                 child: const Text("Continue with google",
                   style: TextStyle(
@@ -106,7 +122,9 @@ class _LandingPageState extends State<LandingPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, "/Login");
+                },
                 icon: Image.asset(
                   "assets/mail.png",
                   width: 40,
@@ -114,9 +132,9 @@ class _LandingPageState extends State<LandingPage> {
               ),
               TextButton(
                 onPressed: (){
-                  print("mail");
+                  Navigator.pushNamed(context, "/Login");
                 },
-                child: const Text("Continue with google",
+                child: const Text("Continue with Mail",
                   style: TextStyle(
                       fontSize: 15,
                       color: Colors.black

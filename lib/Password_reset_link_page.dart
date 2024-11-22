@@ -33,7 +33,7 @@ class _PasswordResetLinkPageState extends State<PasswordResetLinkPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Security"),
+        title: const Text("Password Reset"),
         automaticallyImplyLeading: true,
         backgroundColor: Colors.red,
         titleSpacing: 50,
