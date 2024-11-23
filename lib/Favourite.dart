@@ -85,7 +85,7 @@ class _FavouriteState extends State<Favourite> {
           children: [
             // Search Bar
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(15.0),
               child: TextField(
                 onChanged: _filterRestaurants,
                 decoration: InputDecoration(
@@ -112,27 +112,30 @@ class _FavouriteState extends State<Favourite> {
                   final restaurantName = _filteredRestaurants[index];
                   return Card(
                     elevation: 4,
-                    child: ListTile(
-                      title: Text(
-                        restaurantName,
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      leading: Container(
-                        height: 60,
-                        width: 60,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(40),
-                          // Half of the height for a circular shape
-                          child: Image.asset(
-                            "assets/res_img.png",
-                            fit: BoxFit.cover, // Ensures the image fits the circular container
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: ListTile(
+                        title: Text(
+                          restaurantName,
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        leading: Container(
+                          height: 60,
+                          width: 60,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(40),
+                            // Half of the height for a circular shape
+                            child: Image.asset(
+                              "assets/res_img.png",
+                              fit: BoxFit.cover, // Ensures the image fits the circular container
+                            ),
                           ),
                         ),
-                      ),
-                      trailing: IconButton(
-                        onPressed: () => _removeRestaurantFromFavorites(restaurantName),
-                        icon: const Icon(Icons.close),
-                        color: Colors.red,
+                        trailing: IconButton(
+                          onPressed: () => _removeRestaurantFromFavorites(restaurantName),
+                          icon: const Icon(Icons.close),
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   );

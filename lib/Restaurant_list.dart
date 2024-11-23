@@ -3,17 +3,15 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class List_restaurant extends StatefulWidget {
+  final List<Map<String, dynamic>> displayRes; // List of restaurant details
 
-  final List<String> displayRes;
-
-  List_restaurant(this.displayRes, {super.key});
+  const List_restaurant(this.displayRes, {super.key});
 
   @override
   State<List_restaurant> createState() => _List_restaurantState();
 }
 
 class _List_restaurantState extends State<List_restaurant> {
-
   late DatabaseReference _database;
   late List<bool> _favoriteStates;
   final List<String> _favoriteRestaurants = [];
@@ -38,7 +36,6 @@ class _List_restaurantState extends State<List_restaurant> {
     }
   }
 
-  /// Fetch favorite restaurants and sync with the local list
   Future<void> _loadFavorites() async {
     final snapshot = await _database.get();
 
@@ -52,34 +49,27 @@ class _List_restaurantState extends State<List_restaurant> {
     }
   }
 
-  /// Sync favorite states with `_favoriteRestaurants`
   void _syncFavoriteStates() {
     for (int i = 0; i < widget.displayRes.length; i++) {
-      if (_favoriteRestaurants.contains(widget.displayRes[i])) {
+      if (_favoriteRestaurants.contains(widget.displayRes[i]['Name'])) {
         _favoriteStates[i] = true;
       }
     }
   }
 
-  /// Toggle favorite state and update Firebase Realtime Database
   void _toggleFavorite(int index) async {
-    final restaurantName = widget.displayRes[index];
+    final restaurantName = widget.displayRes[index]['Name'];
 
     setState(() {
       _favoriteStates[index] = !_favoriteStates[index];
     });
 
     if (_favoriteStates[index]) {
-      // Add to Firebase
       await _database.child(restaurantName).set({'value': 'yes'});
-      print('$restaurantName added to favorites!');
     } else {
-      // Remove from Firebase
       await _database.child(restaurantName).remove();
-      print('$restaurantName removed from favorites!');
     }
 
-    // Reload favorites
     _loadFavorites();
   }
 
@@ -88,10 +78,10 @@ class _List_restaurantState extends State<List_restaurant> {
     return ListView.builder(
       itemCount: widget.displayRes.length,
       itemBuilder: (BuildContext context, int index) {
+        var restaurant = widget.displayRes[index];
         return GestureDetector(
           onTap: () {
-            print(widget.displayRes[index]);
-            Navigator.pushNamed(context, "/Restaurant");
+            Navigator.pushNamed(context, "/Restaurant",arguments: restaurant['Name']);
           },
           child: Card(
             elevation: 5,
@@ -102,44 +92,36 @@ class _List_restaurantState extends State<List_restaurant> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
-                    "assets/res_img.png",
+                    restaurant['imageUrl'] ?? "assets/res_img.png",
                     width: 370,
                     height: 180,
-                    alignment: Alignment.center,
                     fit: BoxFit.fill,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-                      widget.displayRes[index],
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      restaurant['Name'],
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              "Cafe",
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              restaurant['Type'] ?? 'N/A',
+                              style: const TextStyle(fontSize: 15),
                             ),
-                          ),
-                          Text(
-                            "4.5",
-                            style: TextStyle(
-                              fontSize: 15,
+                            Text(
+                              restaurant['Ratings'].toString(),
+                              style: const TextStyle(fontSize: 15),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       IconButton(
                         onPressed: () {
@@ -167,7 +149,6 @@ class _List_restaurantState extends State<List_restaurant> {
 
   @override
   void dispose() {
-    // Clean up Firebase listeners if added
     super.dispose();
   }
 }
