@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Reservation_list.dart';
 
@@ -11,6 +12,8 @@ class ReservationPage extends StatefulWidget {
 class _ReservationPageState extends State<ReservationPage> {
   @override
   Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String uid = user!.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Food"),
@@ -23,9 +26,9 @@ class _ReservationPageState extends State<ReservationPage> {
         ),
         centerTitle: true,
       ),
-      body: const Column(
+      body: Column(
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: Center(
                 child: Text("Reservations",
@@ -37,10 +40,10 @@ class _ReservationPageState extends State<ReservationPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 15.0,right: 15.0,top: 10.0),
+            padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 10.0),
             child: SizedBox(
               height: 620,
-              child: ReservationList(),
+              child: ReservationList(uid: uid,),
             ),
           ),
         ],

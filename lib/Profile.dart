@@ -28,7 +28,6 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     fetchData(widget.uid);
-    print(widget.uid);
   }
 
   void show() {
@@ -88,6 +87,37 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  void showProfile() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.black12,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: CircleAvatar(
+                  radius: 100, // Set radius to half of the desired size (500/2)
+                  backgroundColor: Colors.transparent, // Optional background color
+                  child: ClipOval(
+                    child: Image.asset(
+                      "assets/user.png",
+                      width: 250,
+                      height: 250,
+                      fit: BoxFit.cover, // Ensures the image fills the circular container
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
   Future<void> fetchData(String uid) async {
     try {
@@ -122,7 +152,7 @@ class _ProfileState extends State<Profile> {
               children: [
                 GestureDetector(
                   onTap: (){
-                    print("object");
+                    showProfile();
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -156,7 +186,6 @@ class _ProfileState extends State<Profile> {
                 IconButton(
                     onPressed: (){
                       show();
-                      FirebaseDatabase.instance.ref().child("Users").child("user1").child("Value").set(123);
                     },
                     icon: const Icon(Icons.settings)
                 ),
@@ -176,7 +205,7 @@ class _ProfileState extends State<Profile> {
             ),
             GestureDetector(
               onTap: (){
-                Navigator.pushNamed(context, "/Upcoming");
+                Navigator.pushNamed(context, "/Upcoming",arguments: widget.uid);
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -197,7 +226,7 @@ class _ProfileState extends State<Profile> {
             const SizedBox(height: 10,),
             GestureDetector(
               onTap: (){
-                Navigator.pushNamed(context, "/Past");
+                Navigator.pushNamed(context, "/Past",arguments: widget.uid);
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

@@ -13,6 +13,9 @@ class _BookingPageState extends State<BookingPage> {
   late String selectedDate;
   late String selectedTime;
   String guest="For 2";
+  late String res_name,res_location;
+
+  final TextEditingController special_request = TextEditingController();
 
   @override
   void initState() {
@@ -101,7 +104,14 @@ class _BookingPageState extends State<BookingPage> {
                 child: ElevatedButton(
                   onPressed: (){
                     Navigator.of(context).pop();
-                    Navigator.pushNamed(context, "/Booking_slip");
+                    Navigator.pushNamed(context, "/Booking_slip",arguments: {
+                      'Date':selectedDate,
+                      'Time':selectedTime,
+                      'Guest':guest,
+                      'Special Request':special_request.text.trim(),
+                      'Restaurant Name':res_name,
+                      'Restaurant Location':res_location
+                    });
                     const snackBar = SnackBar(
                       content: Text('Your Table has been Reserved'),
                       duration: Duration(seconds: 2),
@@ -132,6 +142,44 @@ class _BookingPageState extends State<BookingPage> {
       },
     );
   }
+
+  bool checkIf24HoursAhead(String dateString, String timeString) {
+    try {
+      // Get the current year
+      String currentYear = DateTime.now().year.toString();
+
+      // Clean the date and time strings to remove non-breaking spaces
+      String cleanDateString = dateString.replaceAll('\u202F', ' ').trim();
+      String cleanTimeString = timeString.replaceAll('\u202F', ' ').trim();
+
+      // Append the current year to the date string if the year is not already included
+      String dateWithYear = "$cleanDateString, $currentYear";
+
+      // Combine cleaned date with year and time into a single string
+      String combinedDateTimeString = "$dateWithYear $cleanTimeString";
+
+      // Debug logs to verify the combined string
+      //debugPrint("Cleaned and Combined DateTime String: $combinedDateTimeString");
+
+      // Parse the combined date and time string
+      DateTime parsedDateTime = DateFormat("EEEE, MMMM d, yyyy h:mm a").parse(combinedDateTimeString);
+
+      // Get the current date and time
+      DateTime now = DateTime.now();
+
+      // Calculate the difference in hours
+      Duration difference = parsedDateTime.difference(now);
+
+      // Return true if 24 hours ahead or more
+      return difference.inHours >= 24;
+    } catch (e) {
+      debugPrint("Error parsing date and time: $e");
+      return false;
+    }
+  }
+
+
+
 
   Widget _buildOption(String option) {
     return GestureDetector(
@@ -165,6 +213,14 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    res_name = arguments['res_name'];
+    res_location = arguments['res_location'];
+
+
     return WillPopScope(
       onWillPop: () async{
         final snackBar = SnackBar(
@@ -302,6 +358,7 @@ class _BookingPageState extends State<BookingPage> {
                 child: Container(
                   height: 240,  // Set the height to 250 pixels
                   child: TextField(
+                    controller: special_request,
                     decoration: const InputDecoration(
                       hintText: "Add Special Request",
                       hintStyle: TextStyle(
@@ -314,21 +371,32 @@ class _BookingPageState extends State<BookingPage> {
                       ),
                       contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0), // Adjust padding for better alignment
                     ),
-                    keyboardType: TextInputType.visiblePassword,
+                    keyboardType: TextInputType.text,
                     maxLines: 6,
                     enableSuggestions: true,
                     enableIMEPersonalizedLearning: true,
-                    onSubmitted: (text) {},
-                    onChanged: (text) {},
                   ),
                 ),
               ),
               Center(
                 child: ElevatedButton(
-                  onPressed: (){
-                    _show_detail_check();
-                   // Navigator.pushNamed(context, "/Booking");
-                  },
+                    onPressed: () {
+                      bool is24HoursAhead = checkIf24HoursAhead(selectedDate, selectedTime);
+
+                      print(special_request.text);
+                      //print(selectedDate+"\n"+selectedTime);
+
+                      if (is24HoursAhead) {
+                        _show_detail_check();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Reservations must be made at least 24 hours in advance."),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[300],
                       overlayColor: Colors.grey[900],

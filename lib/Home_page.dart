@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'Favourite.dart';
 import 'Explore.dart';
 import 'Profile.dart';

@@ -136,6 +136,9 @@ class _FavouriteState extends State<Favourite> {
                           icon: const Icon(Icons.close),
                           color: Colors.red,
                         ),
+                        onTap: (){
+                          Navigator.pushNamed(context, "/Restaurant",arguments: restaurantName);
+                        },
                       ),
                     ),
                   );

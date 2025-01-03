@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 
 class ReservationList extends StatefulWidget {
-  const ReservationList({super.key});
+  const ReservationList({super.key, required this.uid});
+
+  final String uid;
 
   @override
   State<ReservationList> createState() => _ReservationListState();
 }
 
 class _ReservationListState extends State<ReservationList> {
+
+  String uid="";
+
+  @override
+  void initState() {
+    super.initState();
+    uid=widget.uid;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

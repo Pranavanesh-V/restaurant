@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class BookingSlipPage extends StatefulWidget {
@@ -8,10 +11,90 @@ class BookingSlipPage extends StatefulWidget {
 }
 
 class _BookingSlipPageState extends State<BookingSlipPage> {
+  String generateEncryptedCode() {
+    const String characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final Random random = Random();
+
+    return List.generate(7, (index) => characters[random.nextInt(characters.length)]).join();
+  }
+
+  String u_name = "";
+  bool isDataInserted = false; // Flag to prevent duplicate insertion
+
+  Future<void> insertData(
+      String uid,
+      String restaurantName,
+      String code,
+      String guest,
+      String date,
+      String time,
+      String specialRequest) async {
+    try {
+      final databaseReference = FirebaseDatabase.instance.ref().child("Users");
+      DatabaseEvent event = await databaseReference.child(uid).once();
+      DataSnapshot snapshot = event.snapshot;
+
+      u_name = snapshot.child("UserName").value.toString();
+
+      final DatabaseReference reservationRef = FirebaseDatabase.instance
+          .ref("Restaurants")
+          .child(restaurantName)
+          .child("Reservations")
+          .child("$u_name-$code");
+
+      // Check if reservation already exists
+      DatabaseEvent checkEvent = await reservationRef.once();
+      if (checkEvent.snapshot.exists) {
+        print("Reservation already exists!");
+        return;
+      }
+
+      // Insert new reservation
+      await reservationRef.set({
+        "Confirmation Code": code,
+        "Date": date,
+        "Guest": guest,
+        "Guest Name": u_name,
+        "Special Request": specialRequest,
+        "Time": time,
+      });
+
+      print("Data inserted successfully!");
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to reserve the table'),
+          duration: Duration(seconds: 2),
+          elevation: 5,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    String restaurantLocation, restaurantName, code, guest, date, time, specialRequest;
+
+    restaurantLocation = arguments['Restaurant Location'];
+    restaurantName = arguments['Restaurant Name'];
+    guest = arguments['Guest'];
+    time = arguments['Time'];
+    date = arguments['Date'];
+    specialRequest = arguments['Special Request'];
+    code = generateEncryptedCode();
+
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String? uid = user?.uid;
+
+    if (!isDataInserted && uid != null) {
+      insertData(uid, restaurantName, code, guest, date, time, specialRequest);
+      isDataInserted = true; // Mark data as inserted
+    }
+
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         Navigator.pushNamed(context, "/Home");
         return false;
       },
@@ -23,10 +106,10 @@ class _BookingSlipPageState extends State<BookingSlipPage> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: IconButton(
-                  onPressed:()async{
+                  onPressed: () async {
                     Navigator.pushNamed(context, "/Home");
                   },
-                   icon:  Icon(Icons.close,size: 30,),
+                  icon: const Icon(Icons.close, size: 30),
                 ),
               ),
             ),
@@ -35,96 +118,72 @@ class _BookingSlipPageState extends State<BookingSlipPage> {
           backgroundColor: Colors.red,
           titleSpacing: 50,
           titleTextStyle: const TextStyle(
-              fontSize: 25,
-              color: Colors.black
+            fontSize: 25,
+            color: Colors.black,
           ),
           centerTitle: true,
         ),
         body: Column(
           children: [
-            Image.asset("assets/res_img (3).png",width: 360,height: 220,alignment: Alignment.center,fit: BoxFit.cover),
-            const Padding(
-              padding: EdgeInsets.only(left: 15.0,right: 15.0,top: 15.0),
+            Image.asset("assets/res_img (3).png",
+                width: 360, height: 220, alignment: Alignment.center, fit: BoxFit.cover),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Your Reservation is confirmed",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold
-                    ),
+                  const Text(
+                    "Your Reservation is confirmed",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     "We've sent you an email with all the details. You can also add this to your calendar",
                     style: TextStyle(fontSize: 18, color: Colors.black54),
                   ),
-                  SizedBox(
-                    height: 20,
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Date & Time",
+                    style: TextStyle(fontSize: 22),
                   ),
-                  Text("Date & Time",
-                    style: TextStyle(
-                        fontSize: 22,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   Text(
-                    "August 29,8:06 pm",
-                    style: TextStyle(fontSize: 18, color: Colors.black54),
+                    "$date $time",
+                    style: const TextStyle(fontSize: 18, color: Colors.black54),
                   ),
-                  SizedBox(
-                    height: 20,
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Restaurant Name",
+                    style: TextStyle(fontSize: 22),
                   ),
-                  Text("Restaurant Name",
-                    style: TextStyle(
-                      fontSize: 22,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   Text(
-                    "Hidden Gem",
-                    style: TextStyle(fontSize: 18, color: Colors.black54),
+                    restaurantName,
+                    style: const TextStyle(fontSize: 18, color: Colors.black54),
                   ),
-                  SizedBox(
-                    height: 20,
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Location",
+                    style: TextStyle(fontSize: 22),
                   ),
-                  Text("Location",
-                    style: TextStyle(
-                      fontSize: 22,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   Text(
-                    "Chennai",
-                    style: TextStyle(fontSize: 18, color: Colors.black54),
+                    restaurantLocation,
+                    style: const TextStyle(fontSize: 18, color: Colors.black54),
                   ),
-                  SizedBox(
-                    height: 20,
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Confirmation Code",
+                    style: TextStyle(fontSize: 22),
                   ),
-                  Text("Confirmation Code",
-                    style: TextStyle(
-                      fontSize: 22,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   Text(
-                    "SHSNZ2R",
-                    style: TextStyle(fontSize: 18, color: Colors.black54),
+                    code,
+                    style: const TextStyle(fontSize: 18, color: Colors.black54),
                   ),
                 ],
               ),
             ),
-
           ],
         ),
       ),
