@@ -254,7 +254,7 @@ class _ProfileState extends State<Profile> {
             const SizedBox(height: 15,),
             GestureDetector(
               onTap: (){
-                Navigator.pushNamed(context, "/Personal");
+                Navigator.pushNamed(context, "/Personal",arguments: {"uid":widget.uid});
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
