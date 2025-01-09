@@ -6,7 +6,10 @@ import 'Explore.dart';
 import 'Profile.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+
+  final int initialTabIndex;
+
+  HomePage({required this.initialTabIndex}) : super();
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -19,7 +22,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 3, vsync: this,initialIndex: widget.initialTabIndex);
   }
 
   @override

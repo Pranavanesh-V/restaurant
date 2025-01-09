@@ -17,28 +17,43 @@ class _LandingPageState extends State<LandingPage> {
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
 
 
-  void google_auth() async
-  {
+  void google_auth() async {
     User? user = await _authService.signInWithGoogle();
+
     if (user != null) {
       CircularProgressIndicator();
-      _database.child("Users").child(user.uid).set({
-        "Address":"-",
-        "Email":user.email,
-        "Phone":user.phoneNumber,
-        "Profile":"No",
-        "Profile value":"No",
-        "UID":user.uid,
-        "UserName":user.displayName
-      });
+
+      // Reference to the user's data in the database
+      final userRef = _database.child("Users").child(user.uid);
+
+      // Fetch the user's data from the database
+      DatabaseEvent event = await userRef.once();
+      DataSnapshot snapshot = event.snapshot;
+
+      if (snapshot.exists) {
+        // User already exists; don't overwrite the address
+        print('User already exists: ${user.uid}');
+      } else {
+        // User doesn't exist; set initial values
+        await userRef.set({
+          "Address": "-",
+          "Email": user.email,
+          "Phone": user.phoneNumber,
+          "Profile": "No",
+          "Profile value": "No",
+          "UID": user.uid,
+          "UserName": user.displayName,
+        });
+        print('New user created: ${user.uid}');
+      }
+
       Navigator.pushNamed(context, '/Home');
       print('Sign-In Successful: ${user.uid}');
-    }
-    else
-    {
+    } else {
       print("Sign in unsuccessful");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

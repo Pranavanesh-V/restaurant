@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart'; // Import Firebase Realtime Database
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Import for TextInputFormatter
+import 'package:flutter/services.dart';
+import 'package:restaurant/Home_page.dart'; // Import for TextInputFormatter
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -90,12 +91,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-      Navigator.pop(context, {
-        "name": nameController.text,
-        "address": addressController.text,
-        "phone": phoneController.text,
-        "email": emailController.text,
-      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(initialTabIndex: 3), // Set the desired tab index
+        ),
+      );
+
     } catch (e) {
       print("Error updating profile: $e");
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error updating profile")));
