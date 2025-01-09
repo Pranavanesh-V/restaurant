@@ -49,7 +49,7 @@ void main() {
       "/Landing": (context) => LandingPage(),
       "/Login": (context) => LoginPage(),
       "/Sign": (context) => SignupPage(),
-      "/Home": (context) => HomePage( initialTabIndex: 1),
+      "/Home": (context) => HomePage( initialTabIndex: 0),
       "/Restaurant": (context) => RestaurantPage(),
       "/Booking": (context) => BookingPage(),
       "/Reservation": (context) => ReservationPage(),

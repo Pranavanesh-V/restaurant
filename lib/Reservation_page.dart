@@ -14,6 +14,11 @@ class _ReservationPageState extends State<ReservationPage> {
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
     final String uid = user!.uid;
+
+    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    String res_name=arguments["Restaurant name"];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Food"),
@@ -43,7 +48,7 @@ class _ReservationPageState extends State<ReservationPage> {
             padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 10.0),
             child: SizedBox(
               height: 620,
-              child: ReservationList(uid: uid,),
+              child: ReservationList(uid: uid,res_name: res_name,),
             ),
           ),
         ],

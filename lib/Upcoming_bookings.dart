@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Reservation_list.dart';
+import 'Reservation_list_all_.dart';
 
 class UpcomingBookings extends StatefulWidget {
   const UpcomingBookings({Key? key}) : super(key: key);
@@ -50,7 +50,7 @@ class _UpcomingBookingsState extends State<UpcomingBookings> {
             padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 25.0),
             child: SizedBox(
               height: 605,
-              child: ReservationList(
+              child: ReservationListAll(
                 uid: uid, // Pass the retrieved data to ReservationList
               ),
             ),

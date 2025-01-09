@@ -265,7 +265,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/Reservation");
+                  Navigator.pushNamed(context, "/Reservation",arguments: {"Restaurant name":d1[0][0]});
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[400],

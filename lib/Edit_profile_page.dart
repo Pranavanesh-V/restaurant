@@ -94,7 +94,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(initialTabIndex: 3), // Set the desired tab index
+          builder: (context) => HomePage(initialTabIndex: 2), // Set the desired tab index
         ),
       );
 

@@ -42,6 +42,12 @@ class _BookingSlipPageState extends State<BookingSlipPage> {
           .child("Reservations")
           .child("$u_name-$code");
 
+      final DatabaseReference reservationRefUser = FirebaseDatabase.instance
+          .ref("Users")
+          .child(uid)
+          .child("Reservations")
+          .child("$restaurantName-$code");
+
       // Check if reservation already exists
       DatabaseEvent checkEvent = await reservationRef.once();
       if (checkEvent.snapshot.exists) {
@@ -49,8 +55,26 @@ class _BookingSlipPageState extends State<BookingSlipPage> {
         return;
       }
 
+      // Check if reservation already exists
+      DatabaseEvent checkEventUser = await reservationRefUser.once();
+      if (checkEvent.snapshot.exists) {
+        print("Reservation already exists!");
+        return;
+      }
+
       // Insert new reservation
       await reservationRef.set({
+        "Confirmation Code": code,
+        "Date": date,
+        "Guest": guest,
+        "Guest Name": u_name,
+        "Special Request": specialRequest,
+        "Time": time,
+      });
+
+      //Insert new Reservation at user side
+      await reservationRefUser.set({
+        "Restaurant Name":restaurantName,
         "Confirmation Code": code,
         "Date": date,
         "Guest": guest,

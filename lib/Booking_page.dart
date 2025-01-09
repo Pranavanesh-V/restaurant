@@ -35,6 +35,7 @@ class _BookingPageState extends State<BookingPage> {
     if (picked != null) {
       setState(() {
         selectedDate = _formatDate(picked);
+        print(selectedDate);
       });
     }
   }
@@ -52,8 +53,9 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   String _formatDate(DateTime date) {
-    return DateFormat('EEEE, MMMM d').format(date);
+    return DateFormat('EEEE, MMMM d, yyyy').format(date);
   }
+
 
   String _formatTime(TimeOfDay time) {
     final now = DateTime.now();
@@ -145,21 +147,12 @@ class _BookingPageState extends State<BookingPage> {
 
   bool checkIf24HoursAhead(String dateString, String timeString) {
     try {
-      // Get the current year
-      String currentYear = DateTime.now().year.toString();
-
       // Clean the date and time strings to remove non-breaking spaces
       String cleanDateString = dateString.replaceAll('\u202F', ' ').trim();
       String cleanTimeString = timeString.replaceAll('\u202F', ' ').trim();
 
-      // Append the current year to the date string if the year is not already included
-      String dateWithYear = "$cleanDateString, $currentYear";
-
-      // Combine cleaned date with year and time into a single string
-      String combinedDateTimeString = "$dateWithYear $cleanTimeString";
-
-      // Debug logs to verify the combined string
-      //debugPrint("Cleaned and Combined DateTime String: $combinedDateTimeString");
+      // Combine the date and time into a single string
+      String combinedDateTimeString = "$cleanDateString $cleanTimeString";
 
       // Parse the combined date and time string
       DateTime parsedDateTime = DateFormat("EEEE, MMMM d, yyyy h:mm a").parse(combinedDateTimeString);
@@ -269,7 +262,7 @@ class _BookingPageState extends State<BookingPage> {
                       _selectDate(context);
                     },
                     child: Text(
-                      selectedDate,
+                      selectedDate.split(',')[0] + ', ' + selectedDate.split(',')[1], // Remove the year part
                       style: TextStyle(fontSize: 18, color: Colors.blue),
                     ),
                   ),
