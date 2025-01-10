@@ -2,15 +2,13 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant/AuthService.dart';
+import 'package:restaurant/ProfilePopup.dart';
 
 class Profile extends StatefulWidget {
+  String data = "Loading..."; // User name
+  String uid = ""; // User ID
 
-  String data = "Loading...";
-  String uid="";
-
-  Profile(String uid, {super.key})
-  {
-    this.uid = uid;
+  Profile(this.uid, {super.key}) {
     print(uid);
   }
 
@@ -19,9 +17,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   final AuthService _authService = AuthService();
-
   final databaseReference = FirebaseDatabase.instance.ref().child("Users");
 
   @override
@@ -30,6 +26,7 @@ class _ProfileState extends State<Profile> {
     fetchData(widget.uid);
   }
 
+  // Show the settings dialog.
   void show() {
     showDialog(
       context: context,
@@ -87,6 +84,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  // Show profile dialog.
   void showProfile() {
     showDialog(
       context: context,
@@ -103,7 +101,7 @@ class _ProfileState extends State<Profile> {
                   backgroundColor: Colors.transparent, // Optional background color
                   child: ClipOval(
                     child: Image.asset(
-                      "assets/user.png",
+                      "assets/user.png", // Default image
                       width: 250,
                       height: 250,
                       fit: BoxFit.cover, // Ensures the image fills the circular container
@@ -118,7 +116,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-
+  // Fetch user data from Firebase Realtime Database.
   Future<void> fetchData(String uid) async {
     try {
       DatabaseEvent event = await databaseReference.child(uid).once();
@@ -134,7 +132,53 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  // Fetch the profile image URL from Firebase Database.
+  Future<String?> fetchImageUrl(String uid) async {
+    try {
+      DatabaseReference userRef = FirebaseDatabase.instance
+          .ref()
+          .child("Users")
+          .child(uid)
+          .child("Profile value");
 
+      DataSnapshot snapshot = await userRef.get();
+
+      if (snapshot.exists) {
+        String imageUrl = snapshot.value.toString();
+        print(imageUrl);
+        if(imageUrl!="No") {
+          return imageUrl; // Return the URL if found.
+        }
+        else{
+          return null;
+        }
+      } else {
+        print("No image URL found in the database.");
+        return null; // Return null if no URL is present.
+      }
+    } catch (e) {
+      print("Error fetching image URL: $e");
+      return null; // Return null in case of an error.
+    }
+  }
+
+  // Display profile popup when clicked.
+  void showProfilePopup() async {
+    String? currentImageUrl = await fetchImageUrl(widget.uid);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ProfilePopup(
+          username: widget.data,
+          uid:widget.uid,
+          currentImageUrl: currentImageUrl, // Pass the current image URL.
+          onImageUpdated: (newUrl) {
+            print('Image updated: $newUrl');
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,22 +188,52 @@ class _ProfileState extends State<Profile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: (){
-                    showProfile();
-                  },
+                  onTap: showProfilePopup,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       CircleAvatar(
-                        child: Image.asset(
-                        "assets/user.png",width: 70,height: 70,fit: BoxFit.contain,
+                        child: FutureBuilder<String?>(
+                          future: fetchImageUrl(widget.uid),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasData && snapshot.data != null) {
+                              return ClipOval(
+                                child: Image.network(
+                                  snapshot.data!,  // The image URL
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.fitWidth,
+                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                    // If the image is still loading, show a loading spinner
+                                    if (loadingProgress == null) {
+                                      return child; // If the image is loaded, display the image
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress.expectedTotalBytes != null
+                                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                              : null, // Show progress if available
+                                        ),
+                                      );
+                                    }
+                                  },
+                                                            ),
+                              );
+                            } else {
+                              return Image.asset(
+                                "assets/user.png",
+                                width: 70,
+                                height: 70,
+                                fit: BoxFit.contain,
+                              );
+                            }
+                          },
                         ),
                       ),
                       Padding(
@@ -167,15 +241,13 @@ class _ProfileState extends State<Profile> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(widget.data,
-                              style: const TextStyle(
-                                fontSize: 22,
-                              ),
+                            Text(
+                              widget.data,
+                              style: const TextStyle(fontSize: 22),
                             ),
-                            const Text("show profile",
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
+                            const Text(
+                              "show profile",
+                              style: TextStyle(fontSize: 18),
                             ),
                           ],
                         ),
@@ -184,25 +256,17 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 IconButton(
-                    onPressed: (){
-                      show();
-                    },
-                    icon: const Icon(Icons.settings)
+                  onPressed: show,
+                  icon: const Icon(Icons.settings),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 15,
+            const SizedBox(height: 15),
+            const Text(
+              "Reservation",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            const Text("Reservation",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
+            const SizedBox(height: 15),
             GestureDetector(
               onTap: (){
                 Navigator.pushNamed(context, "/Upcoming",arguments: widget.uid);

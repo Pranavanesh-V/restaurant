@@ -38,6 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   firebase_core:
   firebase_auth:
+  firebase_storage:
+  image_picker:
   firebase_database:
   google_sign_in:
   shared_preferences:
