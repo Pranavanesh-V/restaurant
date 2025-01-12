@@ -107,26 +107,40 @@ class _ProfilePopupState extends State<ProfilePopup> {
   }
 
   // Delete the current image from Firebase Storage.
+  // Delete the current image from Firebase Storage.
   Future<void> _deleteImage() async {
-    /*if (_downloadUrl == null) return;
+    if (_downloadUrl == null || _downloadUrl!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No image to delete!')),
+      );
+      return;
+    }
 
     setState(() {
       _isLoading = true;
     });
 
     try {
-      // Reference to the image in Firebase Storage.
+      // Reference to the image in Firebase Storage using the download URL.
       Reference storageRef = FirebaseStorage.instance.refFromURL(_downloadUrl!);
 
-      // Delete the image.
+      // Delete the image from Firebase Storage.
       await storageRef.delete();
 
       setState(() {
-        _downloadUrl = null; // Reset to default image.
-        _selectedImageFile = null; // Remove the selected file.
+        _downloadUrl = null; // Reset the image URL.
+        _selectedImageFile = null; // Clear the selected image file.
       });
 
-      widget.onImageUpdated(''); // Notify parent to reset the profile.
+      // Update the database to remove the image reference (optional).
+      await FirebaseDatabase.instance
+          .ref()
+          .child("Users")
+          .child(widget.uid)
+          .update({'Profile value': null, 'Profile': "No"});
+
+      // Notify the parent widget.
+      widget.onImageUpdated('');
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Image deleted successfully!')),
@@ -139,8 +153,9 @@ class _ProfilePopupState extends State<ProfilePopup> {
       setState(() {
         _isLoading = false;
       });
-    }*/
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
