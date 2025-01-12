@@ -21,7 +21,7 @@ class _LandingPageState extends State<LandingPage> {
     User? user = await _authService.signInWithGoogle();
 
     if (user != null) {
-      CircularProgressIndicator();
+      const CircularProgressIndicator();
 
       // Reference to the user's data in the database
       final userRef = _database.child("Users").child(user.uid);

@@ -13,7 +13,6 @@ class _FavouriteState extends State<Favourite> {
   late DatabaseReference _database;
   final List<String> _favoriteRestaurants = [];
   final List<String> _filteredRestaurants = [];
-  String _searchQuery = "";
   late String _currentUserUID;
 
   @override
@@ -52,7 +51,6 @@ class _FavouriteState extends State<Favourite> {
   /// Filter the restaurants based on search query
   void _filterRestaurants(String query) {
     setState(() {
-      _searchQuery = query;
       if (query.isEmpty) {
         _filteredRestaurants.clear();
         _filteredRestaurants.addAll(_favoriteRestaurants);
@@ -119,7 +117,7 @@ class _FavouriteState extends State<Favourite> {
                           restaurantName,
                           style: const TextStyle(fontSize: 18),
                         ),
-                        leading: Container(
+                        leading: SizedBox(
                           height: 60,
                           width: 60,
                           child: ClipRRect(

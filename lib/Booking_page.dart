@@ -68,7 +68,7 @@ class _BookingPageState extends State<BookingPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Choose an option'),
+          title: const Text('Choose an option'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -91,15 +91,15 @@ class _BookingPageState extends State<BookingPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Booking Confirmation',textAlign: TextAlign.center,),
+          title: const Text('Booking Confirmation',textAlign: TextAlign.center,),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text("Check the details you have provided",textAlign: TextAlign.center,style: TextStyle(
+              const Text("Check the details you have provided",textAlign: TextAlign.center,style: TextStyle(
                 fontSize: 18,
                 color: Colors.black
               ),),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Center(
@@ -216,11 +216,11 @@ class _BookingPageState extends State<BookingPage> {
 
     return WillPopScope(
       onWillPop: () async{
-        final snackBar = SnackBar(
+        const snackBar = SnackBar(
             content: Text('Booking process has been canceled'),
           duration: Duration(seconds: 2),
         );
-        await ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         return true;
     },
       child: Scaffold(
@@ -246,13 +246,13 @@ class _BookingPageState extends State<BookingPage> {
                     fontWeight: FontWeight.bold
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Date",
+                  const Text("Date",
                     style: TextStyle(
                     fontSize: 20
                     ),
@@ -262,8 +262,8 @@ class _BookingPageState extends State<BookingPage> {
                       _selectDate(context);
                     },
                     child: Text(
-                      selectedDate.split(',')[0] + ', ' + selectedDate.split(',')[1], // Remove the year part
-                      style: TextStyle(fontSize: 18, color: Colors.blue),
+                      '${selectedDate.split(',')[0]}, ${selectedDate.split(',')[1]}', // Remove the year part
+                      style: const TextStyle(fontSize: 18, color: Colors.blue),
                     ),
                   ),
                 ],
@@ -271,7 +271,7 @@ class _BookingPageState extends State<BookingPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Time",
+                  const Text("Time",
                     style: TextStyle(
                         fontSize: 20
                     ),
@@ -282,12 +282,12 @@ class _BookingPageState extends State<BookingPage> {
                     },
                     child: Text(
                       selectedTime,
-                      style: TextStyle(fontSize: 18, color: Colors.blue),
+                      style: const TextStyle(fontSize: 18, color: Colors.blue),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               const Text("How many people?",
@@ -296,7 +296,7 @@ class _BookingPageState extends State<BookingPage> {
                     fontWeight: FontWeight.bold
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -306,13 +306,13 @@ class _BookingPageState extends State<BookingPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Guests",
+                      const Text("Guests",
                         style: TextStyle(
                             fontSize: 20
                         ),
                       ),
                       Text(guest,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 20
                         ),
                       ),
@@ -322,14 +322,14 @@ class _BookingPageState extends State<BookingPage> {
                     onPressed: () {
                       _showDialog();
                     },
-                    child: Text(
+                    child: const Text(
                       "Edit",
                       style: TextStyle(fontSize: 18, color: Colors.blue),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               const Text("Special Request",
@@ -338,17 +338,17 @@ class _BookingPageState extends State<BookingPage> {
                     fontWeight: FontWeight.bold
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text("Special Request",
+              const Text("Special Request",
                 style: TextStyle(
                     fontSize: 15
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5.0),
-                child: Container(
+                child: SizedBox(
                   height: 240,  // Set the height to 250 pixels
                   child: TextField(
                     controller: special_request,

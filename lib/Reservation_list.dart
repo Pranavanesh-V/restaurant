@@ -104,7 +104,7 @@ class _ReservationListState extends State<ReservationList> {
                               reservation.name,
                               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                             ),
-                            Text(reservation.date.split(',')[0] + ', ' + reservation.date.split(',')[1]),
+                            Text('${reservation.date.split(',')[0]}, ${reservation.date.split(',')[1]}'),
                           ],
                         ),
                       ),

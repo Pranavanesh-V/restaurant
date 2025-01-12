@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' show exit;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Favourite.dart';
@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
 
   final int initialTabIndex;
 
-  HomePage({required this.initialTabIndex}) : super();
+  const HomePage({super.key, required this.initialTabIndex});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -50,8 +50,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         body: TabBarView(
           controller: _tabController,
           children: [
-            Explore(),
-            Favourite(),
+            const Explore(),
+            const Favourite(),
             Profile(uid!),
           ],
         ),

@@ -102,14 +102,14 @@ class _ReservationListAllState extends State<ReservationListAll> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Center(
+      return const Center(
         child: CircularProgressIndicator(), // Show loading indicator while data is being fetched
       );
     }
 
     // If no reservations are found, display a message
     if (_reservations.isEmpty) {
-      return Center(
+      return const Center(
         child: Text(
           'No upcoming reservations.',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -153,7 +153,7 @@ class _ReservationListAllState extends State<ReservationListAll> {
                             // Display date in a better format (split for day and month)
                             Text(
                               reservation.date.split(',').length > 1
-                                  ? reservation.date.split(',')[0] + ', ' + reservation.date.split(',')[1]
+                                  ? '${reservation.date.split(',')[0]}, ${reservation.date.split(',')[1]}'
                                   : reservation.date,
                             ),
                           ],

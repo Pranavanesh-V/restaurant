@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SpecialMenu extends StatelessWidget {
   final List<List<String>> d;
 
-  SpecialMenu(this.d);
+  const SpecialMenu(this.d, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +17,10 @@ class SpecialMenu extends StatelessWidget {
       containerHeight = 300; // Fixed height for 3 or more items
     }
 
-    return Container(
+    return SizedBox(
       height: containerHeight,
       child: d.isEmpty
-          ? Center(
+          ? const Center(
         child: Text(
           "No Special Menu Available",
           style: TextStyle(

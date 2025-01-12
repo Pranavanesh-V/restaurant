@@ -12,13 +12,10 @@ class RestaurantPage extends StatefulWidget {
 
 class _RestaurantPageState extends State<RestaurantPage> {
 
-  String? _imageUrl;
-  List<String> _imageUrls = [];
   List<List<String>> d = []; // List to hold special menu items
   List<List<String>> d1 = []; // List to hold restaurant details
   String restaurantName = ""; // Variable to store the passed restaurant name
   bool isLoading = true; // To track loading state
-  bool _isLoading = false;
   bool hasSpecialMenu = false; // To check if special menu exists
 
   DatabaseReference getDatabaseRef(String restaurantName) {
@@ -230,10 +227,10 @@ class _RestaurantPageState extends State<RestaurantPage> {
               const SizedBox(height: 10),
               // Display restaurant location and type
               Text(
-                d1.isNotEmpty ? '${d1[0][2]}' : 'Loading type...',
+                d1.isNotEmpty ? d1[0][2] : 'Loading type...',
               ),
               Text(
-                d1.isNotEmpty ? '${d1[0][3]}' : 'Loading ratings...',
+                d1.isNotEmpty ? d1[0][3] : 'Loading ratings...',
               ),
               Text(
                 d1.isNotEmpty ? 'Timings : ${d1[0][6].substring(1,30)}' : 'Loading time...',
@@ -527,7 +524,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(d1.isNotEmpty ? '${d1[0][4]}' : 'Loading phone...',),
+                    child: Text(d1.isNotEmpty ? d1[0][4] : 'Loading phone...',),
                   ),
                 ],
               ),
@@ -540,7 +537,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(d1.isNotEmpty ? '${d1[0][5]}' : 'Loading mail...',),
+                    child: Text(d1.isNotEmpty ? d1[0][5] : 'Loading mail...',),
                   ),
                 ],
               ),
@@ -553,7 +550,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(d1.isNotEmpty ? '${d1[0][1]}' : 'Loading location...',),
+                    child: Text(d1.isNotEmpty ? d1[0][1] : 'Loading location...',),
                   ),
                 ],
               ),
@@ -586,37 +583,4 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 
   // Helper method to build a single image with a loading indicator and fallback.
-  Widget _buildImage(int index) {
-    if (index >= _imageUrls.length) return const SizedBox(); // Prevent out-of-bounds access.
-
-    String? url = _imageUrls[index];
-    String defaultAsset = "assets/res_img (${index + 1}).png";
-
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        const CircularProgressIndicator(), // Show loading indicator initially.
-        Image.network(
-          url!,
-          width: 150,
-          height: 150,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child; // Display the image when fully loaded.
-            }
-            return const CircularProgressIndicator(); // Keep showing the loader until fully loaded.
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return Image.asset(
-              defaultAsset,
-              width: 150,
-              height: 150,
-              fit: BoxFit.cover,
-            ); // Fallback to the default asset in case of an error.
-          },
-        ),
-      ],
-    );
-  }
 }

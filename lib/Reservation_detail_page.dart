@@ -85,10 +85,10 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               ],
             ),
             const SizedBox(height: 20),
-            Column(
+            const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text(
                   "Cancellation Policy",
                   style: TextStyle(fontSize: 24),

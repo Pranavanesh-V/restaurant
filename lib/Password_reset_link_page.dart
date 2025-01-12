@@ -19,7 +19,7 @@ class _PasswordResetLinkPageState extends State<PasswordResetLinkPage> {
     try {
       await _auth.sendPasswordResetEmail(email: email);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password reset link sent!')),
+        const SnackBar(content: Text('Password reset link sent!')),
       );
       Navigator.pop(context);
     } catch (e) {
@@ -48,19 +48,19 @@ class _PasswordResetLinkPageState extends State<PasswordResetLinkPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Change password",
+            const Text("Change password",
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold
               ),
             ),
-            SizedBox(height: 15,),
-            Text("Your password must be at least 6 characters and should be included a combination of number,letters and special charcters(!\$@#",
+            const SizedBox(height: 15,),
+            const Text("Your password must be at least 6 characters and should be included a combination of number,letters and special characters(!\$@#",
               style: TextStyle(
                 fontSize: 15,
               ),
             ),
-            SizedBox(height: 150,),
+            const SizedBox(height: 150,),
             Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
@@ -102,14 +102,14 @@ class _PasswordResetLinkPageState extends State<PasswordResetLinkPage> {
                   ],
                 )
             ),
-            SizedBox(height: 50,),
+            const SizedBox(height: 50,),
             Center(
                 child: ElevatedButton(
                   onPressed: () {
                     _sendPasswordResetEmail(EmailID);
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min, // Make the button only as wide as its content

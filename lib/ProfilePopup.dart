@@ -204,8 +204,8 @@ class _ProfilePopupState extends State<ProfilePopup> {
               ),
               ElevatedButton(
                 onPressed: _isLoading ? null : _deleteImage,
-                child: const Text('Delete'),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text('Delete'),
               ),
             ],
           ),

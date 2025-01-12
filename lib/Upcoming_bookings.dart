@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'Reservation_list_all_.dart';
 
 class UpcomingBookings extends StatefulWidget {
-  const UpcomingBookings({Key? key}) : super(key: key);
+  const UpcomingBookings({super.key});
 
   @override
   State<UpcomingBookings> createState() => _UpcomingBookingsState();

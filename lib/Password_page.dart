@@ -27,33 +27,33 @@ class _PasswordPageState extends State<PasswordPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Password and security",
+            const Text("Password and security",
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold
               ),
             ),
-            SizedBox(height: 15,),
-            Text("Login & recovery",
+            const SizedBox(height: 15,),
+            const Text("Login & recovery",
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold
               ),
             ),
-            SizedBox(height:10,),
-            Text("Manage your passwords,change your passwords at your will...",
+            const SizedBox(height:10,),
+            const Text("Manage your passwords,change your passwords at your will...",
               style: TextStyle(
                   fontSize: 15,
               ),
             ),
-            SizedBox(height: 200,),
+            const SizedBox(height: 200,),
             Center(
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, "/Password_reset"); // Action when button is pressed
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min, // Make the button only as wide as its content

@@ -56,7 +56,6 @@ class _BookingSlipPageState extends State<BookingSlipPage> {
       }
 
       // Check if reservation already exists
-      DatabaseEvent checkEventUser = await reservationRefUser.once();
       if (checkEvent.snapshot.exists) {
         print("Reservation already exists!");
         return;

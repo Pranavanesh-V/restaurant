@@ -85,7 +85,7 @@ class _List_restaurantState extends State<List_restaurant> {
           },
           child: Card(
             elevation: 5,
-            child: Container(
+            child: SizedBox(
               width: 350,
               height: 255,
               child: Column(

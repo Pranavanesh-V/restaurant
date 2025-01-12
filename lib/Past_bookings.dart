@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'Reservation_list_all_Past.dart';
 
 class PastBookings extends StatefulWidget {
-  const PastBookings({Key? key}): super(key: key);
+  const PastBookings({super.key});
 
   @override
   State<PastBookings> createState() => _PastBookingsState();
@@ -35,7 +35,7 @@ class _PastBookingsState extends State<PastBookings> {
       ),
       body: Column(
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: Center(
               child: Text("Past Reservations",
@@ -47,7 +47,7 @@ class _PastBookingsState extends State<PastBookings> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 15.0,right: 15.0,top: 25.0),
+            padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 25.0),
             child: SizedBox(
               height: 605,
               child: ReservationListAllPast(uid: uid),
