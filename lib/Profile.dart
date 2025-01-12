@@ -223,7 +223,7 @@ class _ProfileState extends State<Profile> {
                                       );
                                     }
                                   },
-                                                            ),
+                                ),
                               );
                             } else {
                               return Image.asset(

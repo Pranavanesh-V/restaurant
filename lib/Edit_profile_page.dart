@@ -104,6 +104,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<String?> fetchImageUrl(String uid) async {
+    try {
+      DatabaseReference userRef = FirebaseDatabase.instance
+          .ref()
+          .child("Users")
+          .child(uid)
+          .child("Profile value");
+
+      DataSnapshot snapshot = await userRef.get();
+
+      if (snapshot.exists) {
+        String imageUrl = snapshot.value.toString();
+        print(imageUrl);
+        if(imageUrl!="No") {
+          return imageUrl; // Return the URL if found.
+        }
+        else{
+          return null;
+        }
+      } else {
+        print("No image URL found in the database.");
+        return null; // Return null if no URL is present.
+      }
+    } catch (e) {
+      print("Error fetching image URL: $e");
+      return null; // Return null in case of an error.
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,11 +165,43 @@ class _EditProfilePageState extends State<EditProfilePage> {
               CircleAvatar(
                 maxRadius: 90,
                 minRadius: 90,
-                child: Image.asset(
-                  "assets/user.png",
-                  width: 180,
-                  height: 180,
-                  fit: BoxFit.contain,
+                child: FutureBuilder<String?>(
+                  future: fetchImageUrl(userId!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasData && snapshot.data != null) {
+                      return ClipOval(
+                        child: Image.network(
+                          snapshot.data!,  // The image URL
+                          width: 180,
+                          height: 180,
+                          fit: BoxFit.fitWidth,
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            // If the image is still loading, show a loading spinner
+                            if (loadingProgress == null) {
+                              return child; // If the image is loaded, display the image
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                      : null, // Show progress if available
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      );
+                    } else {
+                      return Image.asset(
+                        "assets/user.png",
+                        width: 180,
+                        height: 180,
+                        fit: BoxFit.contain,
+                      );
+                    }
+                  },
                 ),
               ),
               const SizedBox(height: 10),
