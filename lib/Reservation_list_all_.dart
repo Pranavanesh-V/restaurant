@@ -6,8 +6,10 @@ class Reservation {
   final String date;
   final String guests;
   final String name;
+  final String confirmationCode;
+  final String time;
 
-  Reservation({required this.date, required this.guests, required this.name});
+  Reservation({required this.date, required this.guests,required this.name,required this.confirmationCode,required this.time});
 }
 
 class ReservationListAll extends StatefulWidget {
@@ -76,6 +78,8 @@ class _ReservationListAllState extends State<ReservationListAll> {
                 date: dateString,
                 guests: reservationData['Guest'] ?? 'Unknown Guests',
                 name: reservationData['Restaurant Name'] ?? 'Unknown Restaurant',
+                confirmationCode: reservationData['Confirmation Code'] ?? 'Unknown Code',
+                time: reservationData['Time'] ?? 'Unknown Time'
               );
             }
 
@@ -119,7 +123,7 @@ class _ReservationListAllState extends State<ReservationListAll> {
         final reservation = _reservations[index];
         return GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, "/Reservation_detail", arguments: reservation);
+            Navigator.pushNamed(context, "/Reservation_detail", arguments: {"res name":reservation.name,"res_date":reservation.date,"res_time":reservation.time,"res_code":reservation.confirmationCode,"notify":true});
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),

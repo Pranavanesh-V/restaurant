@@ -7,12 +7,16 @@ class Reservation {
   final String guests;
   final String name;
   final DateTime reservationDateTime;
+  final String confirmationCode;
+  final String time;
 
   Reservation({
     required this.date,
     required this.guests,
     required this.name,
     required this.reservationDateTime,
+    required this.confirmationCode,
+    required this.time
   });
 }
 
@@ -81,6 +85,8 @@ class _ReservationListAllPastState extends State<ReservationListAllPast> {
                 guests: reservationData['Guest'] ?? 'Unknown Guests',
                 name: reservationData['Restaurant Name'] ?? 'Unknown Restaurant',
                 reservationDateTime: reservationDateTime,
+                confirmationCode: reservationData['Confirmation Code'] ?? 'Unknown Code',
+                time: reservationData['Time'] ?? 'Unknown Time'
               );
             }
             return null;
@@ -126,7 +132,7 @@ class _ReservationListAllPastState extends State<ReservationListAllPast> {
         final reservation = _reservations[index];
         return GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, "/Reservation_detail", arguments: reservation);
+            Navigator.pushNamed(context, "/Reservation_detail", arguments: {"res name":reservation.name,"res_date":reservation.date,"res_time":reservation.time,"res_code":reservation.confirmationCode,"notify":false});
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
