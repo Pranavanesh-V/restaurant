@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'Special_menu.dart';
@@ -10,10 +11,14 @@ class RestaurantPage extends StatefulWidget {
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
+
+  String? _imageUrl;
+  List<String> _imageUrls = [];
   List<List<String>> d = []; // List to hold special menu items
   List<List<String>> d1 = []; // List to hold restaurant details
   String restaurantName = ""; // Variable to store the passed restaurant name
   bool isLoading = true; // To track loading state
+  bool _isLoading = false;
   bool hasSpecialMenu = false; // To check if special menu exists
 
   DatabaseReference getDatabaseRef(String restaurantName) {
@@ -113,6 +118,44 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _fetchImageUrlProfile("res_profile.png");
+  }
+
+  Future<String> _fetchImageUrl(String name) async {
+    try {
+      // Reference to the image in Firebase Storage.
+      final ref = FirebaseStorage.instance.ref().child("Restaurants").child(d1[0][0]).child(name);
+
+      // Get the download URL.
+      final url = await ref.getDownloadURL();
+
+      // Return the fetched URL.
+      return url;
+    } catch (e) {
+      print('Error fetching image URL: $e');
+      return ''; // Return an empty string in case of an error
+    }
+  }
+
+  Future<String> _fetchImageUrlProfile(String name) async {
+    try {
+      // Reference to the image in Firebase Storage.
+      final ref = FirebaseStorage.instance.ref().child("Restaurants").child(d1[0][0]).child(name);
+
+      // Get the download URL.
+      final url = await ref.getDownloadURL();
+
+      // Return the fetched URL.
+      return url;
+    } catch (e) {
+      print('Error fetching image URL: $e');
+      return ''; // Return an empty string in case of an error
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -133,7 +176,48 @@ class _RestaurantPageState extends State<RestaurantPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0),
-                    child: Image.asset("assets/restaurant.png", width: 120),
+                    child: CircleAvatar(
+                      maxRadius: 60,
+                      minRadius: 60,
+                      child: FutureBuilder<String?>(
+                        future: _fetchImageUrlProfile("res_profile.png"),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasData && snapshot.data != null) {
+                            return ClipOval(
+                              child: Image.network(
+                                snapshot.data!,  // The image URL
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                  // If the image is still loading, show a loading spinner
+                                  if (loadingProgress == null) {
+                                    return child; // If the image is loaded, display the image
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress.expectedTotalBytes != null
+                                            ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                            : null, // Show progress if available
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                          } else {
+                            return Image.asset(
+                              "assets/restaurant.png",
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            );
+                          }
+                        },
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -181,24 +265,235 @@ class _RestaurantPageState extends State<RestaurantPage> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  Image.asset("assets/res_img (1).png", width: 150, height: 150),
+                  FutureBuilder<String?>(
+                    future: _fetchImageUrl("res_img (1).png"),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasData && snapshot.data != '') {
+                        return Image.network(
+                            snapshot.data!,  // The image URL
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                              // If the image is still loading, show a loading spinner
+                              if (loadingProgress == null) {
+                                return child; // If the image is loaded, display the image
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                        : null, // Show progress if available
+                                  ),
+                                );
+                              }
+                            },
+                        );
+                      } else {
+                        return Image.asset(
+                          "assets/res_img (1).png",
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        );
+                      }
+                    },
+                  ),
                   const SizedBox(width: 20),
-                  Image.asset("assets/res_img (2).png", width: 150, height: 150),
-                ],
-              ),const SizedBox(height: 20),
-              Row(
-                children: [
-                  Image.asset("assets/res_img (3).png", width: 150, height: 150),
-                  const SizedBox(width: 20),
-                  Image.asset("assets/res_img (4).png", width: 150, height: 150),
+                  FutureBuilder<String?>(
+                    future: _fetchImageUrl("res_img (2).png"),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasData && snapshot.data != '') {
+                        return Image.network(
+                          snapshot.data!,  // The image URL
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            // If the image is still loading, show a loading spinner
+                            if (loadingProgress == null) {
+                              return child; // If the image is loaded, display the image
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                      : null, // Show progress if available
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      } else {
+                        return Image.asset(
+                          "assets/res_img (2).png",
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
               Row(
                 children: [
-                  Image.asset("assets/res_img (5).png", width: 150, height: 150),
+                  FutureBuilder<String?>(
+                    future: _fetchImageUrl("res_img (3).png"),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasData && snapshot.data != '') {
+                        return Image.network(
+                          snapshot.data!,  // The image URL
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            // If the image is still loading, show a loading spinner
+                            if (loadingProgress == null) {
+                              return child; // If the image is loaded, display the image
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                      : null, // Show progress if available
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      } else {
+                        return Image.asset(
+                          "assets/res_img (3).png",
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        );
+                      }
+                    },
+                  ),
                   const SizedBox(width: 20),
-                  Image.asset("assets/res_img (6).png", width: 150, height: 150),
+                  FutureBuilder<String?>(
+                    future: _fetchImageUrl("res_img (4).png"),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasData && snapshot.data != '') {
+                        return Image.network(
+                          snapshot.data!,  // The image URL
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            // If the image is still loading, show a loading spinner
+                            if (loadingProgress == null) {
+                              return child; // If the image is loaded, display the image
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                      : null, // Show progress if available
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      } else {
+                        return Image.asset(
+                          "assets/res_img (4).png",
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  FutureBuilder<String?>(
+                    future: _fetchImageUrl("res_img (5).png"),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasData && snapshot.data != '') {
+                        return Image.network(
+                          snapshot.data!,  // The image URL
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            // If the image is still loading, show a loading spinner
+                            if (loadingProgress == null) {
+                              return child; // If the image is loaded, display the image
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                      : null, // Show progress if available
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      } else {
+                        return Image.asset(
+                          "assets/res_img (5).png",
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 20),
+                  FutureBuilder<String?>(
+                    future: _fetchImageUrl("res_img (6).png"),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasData && snapshot.data != '') {
+                        return Image.network(
+                          snapshot.data!,  // The image URL
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            // If the image is still loading, show a loading spinner
+                            if (loadingProgress == null) {
+                              return child; // If the image is loaded, display the image
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                      : null, // Show progress if available
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      } else {
+                        return Image.asset(
+                          "assets/res_img (6).png",
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -287,6 +582,41 @@ class _RestaurantPageState extends State<RestaurantPage> {
           ),
         ),
       ),
+    );
+  }
+
+  // Helper method to build a single image with a loading indicator and fallback.
+  Widget _buildImage(int index) {
+    if (index >= _imageUrls.length) return const SizedBox(); // Prevent out-of-bounds access.
+
+    String? url = _imageUrls[index];
+    String defaultAsset = "assets/res_img (${index + 1}).png";
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        const CircularProgressIndicator(), // Show loading indicator initially.
+        Image.network(
+          url!,
+          width: 150,
+          height: 150,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child; // Display the image when fully loaded.
+            }
+            return const CircularProgressIndicator(); // Keep showing the loader until fully loaded.
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Image.asset(
+              defaultAsset,
+              width: 150,
+              height: 150,
+              fit: BoxFit.cover,
+            ); // Fallback to the default asset in case of an error.
+          },
+        ),
+      ],
     );
   }
 }
