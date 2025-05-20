@@ -33,14 +33,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    final arguments = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as Map<String, dynamic>?;
 
     if (arguments != null) {
       // Initialize userId and other fields
       userId = arguments["uid"]; // userId can be null
       if (userId == null || userId!.isEmpty) {
         // Handle the error when userId is not provided
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("User ID is missing")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("User ID is missing")));
         Navigator.pop(context);
       } else {
         // Populate the text fields with existing data
@@ -51,7 +55,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       }
     } else {
       // Handle the case where arguments are null
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("No data found")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No data found")));
       Navigator.pop(context);
     }
   }
@@ -71,12 +76,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _updateProfile() async {
     try {
       if (userId == null || userId!.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("User ID is missing")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("User ID is missing")));
         return;
       }
 
       // Reference to the user's profile in the Realtime Database
-      DatabaseReference profileRef = FirebaseDatabase.instance.ref('Users/$userId'); // Use the userId
+      DatabaseReference profileRef = FirebaseDatabase.instance.ref(
+          'Users/$userId'); // Use the userId
 
       // Update the profile data
       await profileRef.update({
@@ -94,13 +101,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(initialTabIndex: 2), // Set the desired tab index
+          builder: (context) =>
+              HomePage(initialTabIndex: 2), // Set the desired tab index
         ),
       );
-
     } catch (e) {
       print("Error updating profile: $e");
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error updating profile")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Error updating profile")));
     }
   }
 
@@ -117,10 +125,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
       if (snapshot.exists) {
         String imageUrl = snapshot.value.toString();
         print(imageUrl);
-        if(imageUrl!="No") {
+        if (imageUrl != "No") {
           return imageUrl; // Return the URL if found.
         }
-        else{
+        else {
           return null;
         }
       } else {
@@ -174,19 +182,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     } else if (snapshot.hasData && snapshot.data != null) {
                       return ClipOval(
                         child: Image.network(
-                          snapshot.data!,  // The image URL
+                          snapshot.data!, // The image URL
                           width: 180,
                           height: 180,
                           fit: BoxFit.fitWidth,
-                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
                             // If the image is still loading, show a loading spinner
                             if (loadingProgress == null) {
                               return child; // If the image is loaded, display the image
                             } else {
                               return Center(
                                 child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
-                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                  value: loadingProgress.expectedTotalBytes !=
+                                      null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                      (loadingProgress.expectedTotalBytes ?? 1)
                                       : null, // Show progress if available
                                 ),
                               );
@@ -208,7 +219,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 10),
               _buildTextField("Name", nameController, readOnly: true),
               _buildTextField("Address", addressController, maxLines: 5),
-              _buildTextField("Phone", phoneController, keyboardType: TextInputType.phone, inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+              _buildTextField(
+                "Phone",
+                phoneController,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                ],
+              ),
               _buildTextField("Email", emailController, readOnly: true),
             ],
           ),
@@ -218,7 +237,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   // Helper method to build reusable TextField with a label
-  Widget _buildTextField(String label, TextEditingController controller, {int maxLines = 1, bool readOnly = false, TextInputType keyboardType = TextInputType.text, List<TextInputFormatter> inputFormatters = const []}) {
+  Widget _buildTextField(String label,
+      TextEditingController controller, {
+        int maxLines = 1,
+        bool readOnly = false,
+        TextInputType keyboardType = TextInputType.text,
+        List<TextInputFormatter> inputFormatters = const [],
+      }) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -229,8 +254,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: Text(label),
           ),
           Container(
-            width: double.infinity, // Full width
-            height: maxLines == 1 ? 60 : 120, // Adjust height based on maxLines
+            width: double.infinity,
+            height: maxLines == 1 ? 60 : 120,
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             decoration: BoxDecoration(
               border: Border.all(
@@ -242,12 +267,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: TextField(
               controller: controller,
               maxLines: maxLines,
-              readOnly: readOnly, // Make the field read-only
-              keyboardType: keyboardType, // Set the keyboard type for phone numbers
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(10),
-              ],
+              readOnly: readOnly,
+              keyboardType: keyboardType,
+              inputFormatters: inputFormatters,
+              // only apply passed inputFormatters
               decoration: const InputDecoration(
                 border: InputBorder.none,
               ),
