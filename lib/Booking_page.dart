@@ -235,179 +235,184 @@ class _BookingPageState extends State<BookingPage> {
           ),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 20.0,right: 20.0,top: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("Select a date and time",
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20.0,right: 20.0,top: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Date",
+                  const Text("Select a date and time",
                     style: TextStyle(
-                    fontSize: 20
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      _selectDate(context);
-                    },
-                    child: Text(
-                      '${selectedDate.split(',')[0]}, ${selectedDate.split(',')[1]}', // Remove the year part
-                      style: const TextStyle(fontSize: 18, color: Colors.blue),
-                    ),
+                  const SizedBox(
+                    height: 10,
                   ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Time",
-                    style: TextStyle(
-                        fontSize: 20
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      _selectTime(context);
-                    },
-                    child: Text(
-                      selectedTime,
-                      style: const TextStyle(fontSize: 18, color: Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text("How many people?",
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Guests",
+                      const Text("Date",
                         style: TextStyle(
-                            fontSize: 20
+                        fontSize: 20
                         ),
                       ),
-                      Text(guest,
-                        style: const TextStyle(
-                            fontSize: 20
+                      TextButton(
+                        onPressed: () {
+                          _selectDate(context);
+                        },
+                        child: Text(
+                          '${selectedDate.split(',')[0]}, ${selectedDate.split(',')[1]}', // Remove the year part
+                          style: const TextStyle(fontSize: 18, color: Colors.blue),
                         ),
                       ),
                     ],
                   ),
-                  TextButton(
-                    onPressed: () {
-                      _showDialog();
-                    },
-                    child: const Text(
-                      "Edit",
-                      style: TextStyle(fontSize: 18, color: Colors.blue),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Time",
+                        style: TextStyle(
+                            fontSize: 20
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          _selectTime(context);
+                        },
+                        child: Text(
+                          selectedTime,
+                          style: const TextStyle(fontSize: 18, color: Colors.blue),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text("How many people?",
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Guests",
+                            style: TextStyle(
+                                fontSize: 20
+                            ),
+                          ),
+                          Text(guest,
+                            style: const TextStyle(
+                                fontSize: 20
+                            ),
+                          ),
+                        ],
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          _showDialog();
+                        },
+                        child: const Text(
+                          "Edit",
+                          style: TextStyle(fontSize: 18, color: Colors.blue),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text("Special Request",
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text("Special Request",
+                    style: TextStyle(
+                        fontSize: 15
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: SizedBox(
+                      height: 240,  // Set the height to 250 pixels
+                      child: TextField(
+                        controller: special_request,
+                        decoration: const InputDecoration(
+                          hintText: "Add Special Request",
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0), // Adjust padding for better alignment
+                        ),
+                        keyboardType: TextInputType.text,
+                        maxLines: 6,
+                        enableSuggestions: true,
+                        enableIMEPersonalizedLearning: true,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          bool is24HoursAhead = checkIf24HoursAhead(selectedDate, selectedTime);
+
+                          print(special_request.text);
+                          //print(selectedDate+"\n"+selectedTime);
+
+                          if (is24HoursAhead) {
+                            _show_detail_check();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Reservations must be made at least 24 hours in advance."),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                        },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[300],
+                          overlayColor: Colors.grey[900],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          fixedSize: const Size(200, 50),
+                          maximumSize: const Size(200, 50),
+                          minimumSize: const Size(100, 25)
+                      ),
+                      child:const Text("Confirm",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text("Special Request",
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text("Special Request",
-                style: TextStyle(
-                    fontSize: 15
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0),
-                child: SizedBox(
-                  height: 240,  // Set the height to 250 pixels
-                  child: TextField(
-                    controller: special_request,
-                    decoration: const InputDecoration(
-                      hintText: "Add Special Request",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0), // Adjust padding for better alignment
-                    ),
-                    keyboardType: TextInputType.text,
-                    maxLines: 6,
-                    enableSuggestions: true,
-                    enableIMEPersonalizedLearning: true,
-                  ),
-                ),
-              ),
-              Center(
-                child: ElevatedButton(
-                    onPressed: () {
-                      bool is24HoursAhead = checkIf24HoursAhead(selectedDate, selectedTime);
-
-                      print(special_request.text);
-                      //print(selectedDate+"\n"+selectedTime);
-
-                      if (is24HoursAhead) {
-                        _show_detail_check();
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Reservations must be made at least 24 hours in advance."),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
-                      overlayColor: Colors.grey[900],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      fixedSize: const Size(200, 50),
-                      maximumSize: const Size(200, 50),
-                      minimumSize: const Size(100, 25)
-                  ),
-                  child:const Text("Confirm",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

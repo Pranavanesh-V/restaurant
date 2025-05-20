@@ -157,6 +157,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ],
         centerTitle: true,
       ),
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(
@@ -243,7 +244,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               maxLines: maxLines,
               readOnly: readOnly, // Make the field read-only
               keyboardType: keyboardType, // Set the keyboard type for phone numbers
-              inputFormatters: inputFormatters, // Allow only digits in phone number
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(10),
+              ],
               decoration: const InputDecoration(
                 border: InputBorder.none,
               ),

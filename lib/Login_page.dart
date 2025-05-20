@@ -50,121 +50,131 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(left: 50,right: 50),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 130,),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 50,right: 50),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Login",style: TextStyle(
-                  fontSize: 40
-                      ,color: Colors.red
-                ),),
-              ],
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            const Text("Email ID",
-              style: TextStyle(
-                  fontSize: 22
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  hintText: "Email Address",
-                  hintStyle: TextStyle(
-                    color: Colors.grey
-                  ),
-                  prefixIcon:Icon(Icons.person),
-                  label: Text("Email Id"),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(100)
-                      )
+                const SizedBox(height: 130,),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Login",style: TextStyle(
+                      fontSize: 40
+                          ,color: Colors.red
+                    ),),
+                  ],
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                const Text("Email ID",
+                  style: TextStyle(
+                      fontSize: 22
                   ),
                 ),
-                autofocus: true,
-                enableIMEPersonalizedLearning: true,
-                keyboardType: TextInputType.emailAddress,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text("Password",
-              style: TextStyle(
-                fontSize: 22
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: TextField(
-                obscureText: !_isPasswordVisible, // Hide or show password text
-                keyboardType: TextInputType.text,
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  hintText: "Password",
-                  hintStyle: const TextStyle(
-                      color: Colors.grey
-                  ),
-                  prefixIcon:const Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: TextField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      hintText: "Email Address",
+                      hintStyle: TextStyle(
+                        color: Colors.grey
+                      ),
+                      prefixIcon:Icon(Icons.person),
+                      label: Text("Email Id"),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(100)
+                          )
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  ),
-                  label: const Text("Password"),
-                  border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(100)
-                      )
+                    autofocus: true,
+                    enableIMEPersonalizedLearning: true,
+                    keyboardType: TextInputType.emailAddress,
                   ),
                 ),
-                maxLines: 1,
-                enableSuggestions: true,
-                enableIMEPersonalizedLearning: true,
-              ),
-            ),
-            Row(
-              children: [
-                const SizedBox(width: 10,),
-                TextButton(
-                  onPressed: (){
-                    Navigator.pushNamed(context, "/Password_reset");
-                  },
-                  child: const Text("forgot password?",style: TextStyle(
-                    fontSize:18,
-                    color: Colors.black,
-                  ),),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text("Password",
+                  style: TextStyle(
+                    fontSize: 22
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: TextField(
+                    obscureText: !_isPasswordVisible, // Hide or show password text
+                    keyboardType: TextInputType.text,
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                      hintStyle: const TextStyle(
+                          color: Colors.grey
+                      ),
+                      prefixIcon:const Icon(Icons.lock),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
+                      label: const Text("Password"),
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(100)
+                          )
+                      ),
+                    ),
+                    maxLines: 1,
+                    enableSuggestions: true,
+                    enableIMEPersonalizedLearning: true,
+                  ),
+                ),
+                Row(
+                  children: [
+                    const SizedBox(width: 10,),
+                    TextButton(
+                      onPressed: (){
+                        Navigator.pushNamed(context, "/Password_reset");
+                      },
+                      child: const Text("forgot password?",style: TextStyle(
+                        fontSize:18,
+                        color: Colors.black,
+                      ),),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 100,),
+                Center(
+                  child: FilledButton.icon(
+                      onPressed: _authenticateWithEmail,
+                      label: const Icon(Icons.arrow_right_alt_sharp),
+                    style: FilledButton.styleFrom(
+                      elevation: 5,
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                  ),
+                )
                 ),
               ],
             ),
-            const SizedBox(height: 100,),
-            Center(
-              child: FilledButton.icon(
-                  onPressed: _authenticateWithEmail,
-                  label: const Icon(Icons.arrow_right_alt_sharp),
-                style: FilledButton.styleFrom(
-                  elevation: 5.0,
-                  backgroundColor: Colors.red,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
