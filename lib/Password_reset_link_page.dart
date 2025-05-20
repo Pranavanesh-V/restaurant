@@ -32,6 +32,7 @@ class _PasswordResetLinkPageState extends State<PasswordResetLinkPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text("Password Reset"),
         automaticallyImplyLeading: true,
@@ -43,85 +44,89 @@ class _PasswordResetLinkPageState extends State<PasswordResetLinkPage> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20.0,right: 20,top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text("Change password",
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold
-              ),
-            ),
-            const SizedBox(height: 15,),
-            const Text("Your password must be at least 6 characters and should be included a combination of number,letters and special characters(!\$@#",
-              style: TextStyle(
-                fontSize: 15,
-              ),
-            ),
-            const SizedBox(height: 150,),
-            Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Text("Email ID"),
-                    ),
-                    Container(
-                      width: 500, // Set the width
-                      height: 60, // Set the height
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey, // Set the border color
-                          width: 2.0, // Set the border width
-                        ),
-                        borderRadius: BorderRadius.circular(10.0), // Optional: Set border radius
-                      ),
-                      child: Center(
-                        child: TextField(
-                          onSubmitted: (x){
-                            EmailID=x.trim();
-                          },
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none, // Remove the underline border
-                            enabledBorder: InputBorder.none, // Ensure no border when enabled
-                            focusedBorder: InputBorder.none,
-                          ),
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 16.0, // Optional: Set text size
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-            ),
-            const SizedBox(height: 50,),
-            Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    _sendPasswordResetEmail(EmailID);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20.0,right: 20,top: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Change password",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold
                   ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min, // Make the button only as wide as its content
-                    children: [
-                      Text('Change password'),
-                      SizedBox(width: 8), // Add some spacing between text and icon
-                      Icon(Icons.send), // Icon at the end
-                    ],
+                ),
+                const SizedBox(height: 15,),
+                const Text("Your password must be at least 6 characters and should be included a combination of number,letters and special characters(!\$@#",
+                  style: TextStyle(
+                    fontSize: 15,
                   ),
-                )
+                ),
+                const SizedBox(height: 150,),
+                Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text("Email ID"),
+                        ),
+                        Container(
+                          width: 500, // Set the width
+                          height: 60, // Set the height
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey, // Set the border color
+                              width: 2.0, // Set the border width
+                            ),
+                            borderRadius: BorderRadius.circular(10.0), // Optional: Set border radius
+                          ),
+                          child: Center(
+                            child: TextField(
+                              onSubmitted: (x){
+                                EmailID=x.trim();
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none, // Remove the underline border
+                                enabledBorder: InputBorder.none, // Ensure no border when enabled
+                                focusedBorder: InputBorder.none,
+                              ),
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 16.0, // Optional: Set text size
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                ),
+                const SizedBox(height: 50,),
+                Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _sendPasswordResetEmail(EmailID);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min, // Make the button only as wide as its content
+                        children: [
+                          Text('Change password'),
+                          SizedBox(width: 8), // Add some spacing between text and icon
+                          Icon(Icons.send), // Icon at the end
+                        ],
+                      ),
+                    )
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
