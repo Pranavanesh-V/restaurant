@@ -1,0 +1,2 @@
+D:/Android_prj/Restaurant/android/app/.cxx/Debug/516r3pv3/x86_64/CMakeFiles/edit_cache.dir
+D:/Android_prj/Restaurant/android/app/.cxx/Debug/516r3pv3/x86_64/CMakeFiles/rebuild_cache.dir

@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:351451918792:android:8eb380672bdde62dfd90fd",
+        "android_client_info": {
+          "package_name": "com.companyname.event_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351451918792-gquu0d1pkhpqa7c8vllmh874md3vhvgp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAduCsp3BuZxottmgg7xo1BMnsaypWO1mQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351451918792-gquu0d1pkhpqa7c8vllmh874md3vhvgp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:351451918792:android:2401ef36e19552fcfd90fd",
         "android_client_info": {
           "package_name": "com.example.food"
@@ -51,6 +80,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "351451918792-43u8q8krcd9568dib27tqjslv06dqgb0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.restaurant",
+            "certificate_hash": "a86642c0bd372bb75daf39f09af98411142ba77f"
+          }
+        },
         {
           "client_id": "351451918792-gquu0d1pkhpqa7c8vllmh874md3vhvgp.apps.googleusercontent.com",
           "client_type": 3

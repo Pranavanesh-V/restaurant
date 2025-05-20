@@ -81,29 +81,31 @@ class _ExploreState extends State<Explore> {
               style: const TextStyle(fontSize: 18, color: Colors.black),
             ),
           ),
-          isLoading
-              ? const Positioned(
-                top: 550,
-                right: 500,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 200.0),
-                  child: Center(
-                    child: CircularProgressIndicator(), // Loading indicator while data is being fetched
+          Expanded(
+            child: isLoading
+                ? const Positioned(
+                  top: 550,
+                  right: 500,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 200.0),
+                    child: Center(
+                      child: CircularProgressIndicator(), // Loading indicator while data is being fetched
+                    ),
+                  ),
+                ) : displayRes.isNotEmpty
+                ? Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  width: 350,
+                  height: 518,
+                  child: List_restaurant(displayRes),
+                )
+                : Center(
+                    child: Text(
+                      message ?? '',
+                      style: const TextStyle(fontSize: 18),
                   ),
                 ),
-              ) : displayRes.isNotEmpty
-              ? Container(
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                width: 350,
-                height: 518,
-                child: List_restaurant(displayRes),
-              )
-              : Center(
-                  child: Text(
-                    message ?? '',
-                    style: const TextStyle(fontSize: 18),
-                ),
-              ),
+          ),
         ],
       ),
     );

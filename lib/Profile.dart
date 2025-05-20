@@ -84,38 +84,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  // Show profile dialog.
-  void showProfile() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.black12,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: CircleAvatar(
-                  radius: 100, // Set radius to half of the desired size (500/2)
-                  backgroundColor: Colors.transparent, // Optional background color
-                  child: ClipOval(
-                    child: Image.asset(
-                      "assets/user.png", // Default image
-                      width: 250,
-                      height: 250,
-                      fit: BoxFit.cover, // Ensures the image fills the circular container
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   // Fetch user data from Firebase Realtime Database.
   Future<void> fetchData(String uid) async {
     try {
@@ -182,6 +150,8 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+    });
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15.0),
